@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" fillWidth="false" spacing="10" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HelloController">
+  <Pane fx:id="drawingPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseReleased="#onPaneMouseRelease" prefHeight="768.0" prefWidth="1366.0" style="-fx-border-color: black; -fx-background-color: white;" />
+   <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
+      <buttons>
+        <Button id="NAND" onAction="#onGateButtonClick" text="NAND" />
+        <Button id="AND" onAction="#onGateButtonClick" text="AND" />
+        <Button id="NOR" onAction="#onGateButtonClick" text="NOR" />
+        <Button id="OR" onAction="#onGateButtonClick" text="OR" />
+        <ToggleButton id="WIRE" onAction="#onWireButtonClick" text="Wire" />
+      </buttons>
+   </ButtonBar>
+</VBox>
