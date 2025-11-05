@@ -1,6 +1,5 @@
 package com.example.demo1;
 
-import CustomShapes.ShapePaths;
 import Gates.AND;
 import Gates.*;
 import Gates.NAND;
@@ -15,7 +14,7 @@ import javafx.scene.shape.*;
 
 import java.util.ArrayList;
 
-public class HelloController {
+public class Controller {
     @FXML
     private Pane drawingPane;
 
