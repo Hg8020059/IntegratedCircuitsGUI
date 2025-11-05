@@ -7,6 +7,7 @@
   <Pane fx:id="drawingPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseReleased="#onPaneMouseRelease" prefHeight="768.0" prefWidth="1366.0" style="-fx-border-color: black; -fx-background-color: white;" />
    <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
       <buttons>
+        <Button id="NOT" onAction="#onGateButtonClick" text="NOT" />
         <Button id="NAND" onAction="#onGateButtonClick" text="NAND" />
         <Button id="AND" onAction="#onGateButtonClick" text="AND" />
         <Button id="NOR" onAction="#onGateButtonClick" text="NOR" />

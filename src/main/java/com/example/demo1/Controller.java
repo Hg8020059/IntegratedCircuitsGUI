@@ -97,6 +97,10 @@ public class Controller {
                 gate = new NAND();
                 gate.display = createPathRegion(NAND.path);
                 break;
+            case "NOT":
+                gate = new NOT();
+                gate.display = createPathRegion(NOT.path);
+                break;
             default:
                 throw new RuntimeException("Shape path not found");
         };
