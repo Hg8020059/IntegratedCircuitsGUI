@@ -1,7 +1,7 @@
 package Gates;
 import Basics.*;
 
-public class OR extends Gates{
+public class OR extends Gate {
     //Frontend
     public static String path = "M 1 0 C 5 1 5 1 9 0 C 9 3 7 7 5 8 C 3 7 1 3 1 0";
 

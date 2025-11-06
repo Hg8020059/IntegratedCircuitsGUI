@@ -1,8 +1,7 @@
 package Gates;
 import Basics.*;
-import javafx.scene.layout.Region;
 
-public class AND extends Gates{
+public class AND extends Gate {
     //Frontend
     public static String path = "M 1 0 L 9 0 L 9 4 C 9 7 7 8 5 8 C 3 8 1 7 1 4 L 1 0";
 

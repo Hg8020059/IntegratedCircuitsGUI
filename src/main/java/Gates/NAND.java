@@ -1,8 +1,7 @@
 package Gates;
 import Basics.*;
-import javafx.scene.layout.Region;
 
-public class NAND extends Gates{
+public class NAND extends Gate {
     //Frontend
     public static String path = "M 1 0 L 9 0 L 9 4 C 9 7 7 8 5 8 A 1 1 0 0 0 4 9 A 1 1 0 0 0 6 9 A 1 1 0 0 0 5 8 C 3 8 1 7 1 4 L 1 0";
     public int numInputs = 2;

@@ -1,7 +1,7 @@
 package Gates;
 import Basics.*;
 
-public class NOR extends Gates{
+public class NOR extends Gate {
     //Frontend
     public static String path = "M 1 0 C 5 1 5 1 9 0 C 9 3 7 7 5 8 A 1 1 0 0 0 4 9 A 1 1 0 0 0 6 9 A 1 1 0 0 0 5 8 C 3 7 1 3 1 0";
 

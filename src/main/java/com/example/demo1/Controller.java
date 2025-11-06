@@ -6,6 +6,7 @@ import Gates.NAND;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -19,11 +20,11 @@ public class Controller {
     private Pane drawingPane;
 
     //Global Variables
-    private ArrayList<Gates> components = new ArrayList<>(); //List holding all components
-    private Region moving = null;
-    private ArrayList<Line> lines = new ArrayList<>();
-    private boolean wireToggle = false;
-    private double[] wire_start = new double[2];
+    public static ArrayList<Gate> components = new ArrayList<>(); //List holding all components
+    public static Region moving = null;
+    public static ArrayList<Line> lines = new ArrayList<>();
+    public static boolean wireToggle = false;
+    public static double[] wire_start = new double[2];
 
     //Create the region objects for each component
     public Region createPathRegion(String path){
@@ -73,9 +74,8 @@ public class Controller {
     }
 
     @FXML
-    //Parses the text on the button to ensure that
     protected void onGateButtonClick(ActionEvent event) {
-        Gates gate;
+        Gate gate;
         //Get ID of button to make this event reusable and work for all component creation buttons
         Button button = (Button) event.getSource();
         String name = button.getId();
@@ -105,9 +105,6 @@ public class Controller {
                 throw new RuntimeException("Shape path not found");
         };
 
-        //Create region containing the svg path, for ease of use
-        //Region region = createPathRegion(path);
-
         components.add(gate);
         drawingPane.getChildren().add(components.getLast().display);
         System.out.println(components);
@@ -122,7 +119,7 @@ public class Controller {
     protected void onPaneMouseRelease(MouseEvent event){
         double x = event.getX();
         double y = event.getY();
-        System.out.println("(" + x + ", " + y + ")");
+        //System.out.println("(" + x + ", " + y + ")");
 
         // Component moving logic
         if(moving!=null){
@@ -137,7 +134,7 @@ public class Controller {
         //Logic for if we are creating wires
         if(wireToggle){
             //Find a component to link it to
-            for(Gates i:components){
+            for(Gate i:components){
                 Region j = i.display;
                 //If wire is successfully created
                 if(j.contains(x-j.getLayoutX(),y-j.getLayoutY())){

@@ -2,6 +2,8 @@ package Basics;
 
 import Gates.AND;
 import Gates.NOT;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.SVGPath;
 
 import java.lang.Math;
 
