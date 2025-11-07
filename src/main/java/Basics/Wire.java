@@ -1,8 +1,15 @@
 package Basics;
 
+import Gates.Gate;
+import javafx.scene.shape.Line;
+
 import java.util.ArrayList;
 
 public class Wire {
+    //Frontend
+    public Line display;
+
+    //Backend
     public ArrayList<Basic> inputs;
     public ArrayList<Transistor> outputs = new ArrayList<>();
     public String name;

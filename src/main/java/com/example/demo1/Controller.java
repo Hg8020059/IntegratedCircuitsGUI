@@ -6,7 +6,6 @@ import Gates.NAND;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -19,59 +18,13 @@ public class Controller {
     @FXML
     private Pane drawingPane;
 
-    //Global Variables
+    //Global Variables todo: look into getting rid of some of these
     public static ArrayList<Gate> components = new ArrayList<>(); //List holding all components
     public static Region moving = null;
     public static ArrayList<Line> lines = new ArrayList<>();
     public static boolean wireToggle = false;
     public static double[] wire_start = new double[2];
-
-    //Create the region objects for each component
-    public Region createPathRegion(String path){
-        SVGPath svg = new SVGPath();
-        svg.setContent(path);
-        Region region = new Region();
-        region.setShape(svg);
-        region.setMinSize(50, 60);
-        region.setPrefSize(50, 60);
-        region.setMaxSize(50, 60);
-        region.setStyle("-fx-background-color: transparent; -fx-border-color: black;");
-
-        //Set events
-        region.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //If wire toggle is on
-                if(wireToggle){
-                    //Get center of starting component
-                    wire_start[0] = region.getBoundsInParent().getCenterX();
-                    wire_start[1] = region.getBoundsInParent().getCenterY();
-                }
-                // Move the component if wire toggle is off
-                else {
-                    moving = region;
-                    region.setStyle("-fx-background-color: grey; -fx-border-color: black;");
-                }
-            }
-        });
-
-        //Make gates grey when hovered over
-        region.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                region.setStyle("-fx-background-color: grey; -fx-border-color: black;");
-            }
-        });
-        region.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if(moving != region){
-                    region.setStyle("-fx-background-color: transparent; -fx-border-color: black;");
-                }
-            }
-        });
-        return region;
-    }
+    public static Gate wireStartGate = null;
 
     @FXML
     protected void onGateButtonClick(ActionEvent event) {
@@ -83,32 +36,65 @@ public class Controller {
         switch (name) {
             case "OR":
                 gate = new OR();
-                gate.display = createPathRegion(OR.path);
                 break;
             case "NOR":
                 gate = new NOR();
-                gate.display = createPathRegion(NOR.path);
                 break;
             case "AND":
                 gate = new AND();
-                gate.display = createPathRegion(AND.path);
                 break;
             case "NAND":
                 gate = new NAND();
-                gate.display = createPathRegion(NAND.path);
                 break;
             case "NOT":
                 gate = new NOT();
-                gate.display = createPathRegion(NOT.path);
                 break;
             default:
                 throw new RuntimeException("Shape path not found");
         };
 
         components.add(gate);
-        drawingPane.getChildren().add(components.getLast().display);
+        gate.display.setOnMouseEntered(regionMouseEnter);
+        gate.display.setOnMouseExited(regionMouseExit);
+        gate.display.setOnMousePressed(regionMousePressed);
+        drawingPane.getChildren().add(gate.display);
         System.out.println(components);
     }
+
+    //------------------------------ event handlers---------------------------------------------
+
+    //Start of region handlers
+    EventHandler<MouseEvent> regionMouseEnter = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            Region region = (Region) mouseEvent.getSource();
+            region.setStyle("-fx-background-color: grey; -fx-border-color: black;");
+        }
+    };
+
+    EventHandler<MouseEvent> regionMouseExit = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            Region region = (Region) mouseEvent.getSource();
+            if(moving != region){ //Keep it gray while its moving
+                region.setStyle("-fx-background-color: transparent; -fx-border-color: black;");
+            }
+        }
+    };
+
+    EventHandler<MouseEvent> regionMousePressed = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            Region region = (Region) mouseEvent.getSource();
+            //If wire toggle is off
+            if(!wireToggle){
+                moving = region;
+                region.setStyle("-fx-background-color: grey; -fx-border-color: black;");
+            }
+        }
+    };
+
+    //End of region handlers
 
     @FXML
     protected void onWireButtonClick(){
@@ -116,10 +102,30 @@ public class Controller {
     }
 
     @FXML
+    protected void onPaneMousePressed(MouseEvent event){
+        double x = event.getX();
+        double y = event.getY();
+
+        if(wireToggle){
+            //Find a component to link it to
+            for(Gate i:components){
+                Region j = i.display;
+                //If component is found
+                if(j.contains(x-j.getLayoutX(),y-j.getLayoutY())){
+                    wire_start[0] = j.getBoundsInParent().getCenterX();
+                    wire_start[1] = j.getBoundsInParent().getCenterY();
+
+                    wireStartGate = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    @FXML
     protected void onPaneMouseRelease(MouseEvent event){
         double x = event.getX();
         double y = event.getY();
-        //System.out.println("(" + x + ", " + y + ")");
 
         // Component moving logic
         if(moving!=null){
@@ -132,19 +138,21 @@ public class Controller {
         }
 
         //Logic for if we are creating wires
-        if(wireToggle){
+        if(wireToggle && wireStartGate != null){
             //Find a component to link it to
             for(Gate i:components){
                 Region j = i.display;
-                //If wire is successfully created
+                //If component is found
                 if(j.contains(x-j.getLayoutX(),y-j.getLayoutY())){
-                    //System.out.println(wire_start[0] + ", " + wire_start[1]);
-                    //System.out.println("Mouse release: " + x + ", " + y);
+                    //todo: create wire connections between found components
+
                     lines.add(new Line(wire_start[0], wire_start[1], j.getBoundsInParent().getCenterX(), j.getBoundsInParent().getCenterY()));
                     drawingPane.getChildren().add(lines.getLast());
                     break;
                 }
             }
+            wireStartGate = null;
         }
+
     }
 }

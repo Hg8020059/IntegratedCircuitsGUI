@@ -4,6 +4,8 @@ import Basics.*;
 public class NOT extends Gate {
     //Frontend
     public static String path = "M 0 0 L 8 0 L 4 6 A 1 1 0 0 0 3 7 A 1 1 0 0 0 5 7 A 1 1 0 0 0 4 6 L 0 0";
+    public static int numInputs = 1;
+
     //Backend
     // Setting up internal circuitry for the not gate
     public PMOS p1;
@@ -12,6 +14,7 @@ public class NOT extends Gate {
 
     //----------------------------------------- Constructors --------------------------------------------------
     public NOT(){
+        display = Util.createPathRegion(path);
         p1 = null;
         n1 = null;
         W_input1 = null;
@@ -19,6 +22,7 @@ public class NOT extends Gate {
 
 
     public NOT(Wire inputWire){
+        display = Util.createPathRegion(path);
         init(inputWire);
     }
     //----------------------------------------- Mutators ------------------------------------------------------

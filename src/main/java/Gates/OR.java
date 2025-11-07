@@ -4,6 +4,7 @@ import Basics.*;
 public class OR extends Gate {
     //Frontend
     public static String path = "M 1 0 C 5 1 5 1 9 0 C 9 3 7 7 5 8 C 3 7 1 3 1 0";
+    public static int numInputs = 2;
 
     //Backend
     public NOR nor;
@@ -13,13 +14,11 @@ public class OR extends Gate {
 
     //----------------------------------------- Constructors --------------------------------------------------
     public OR(){
-        W_input1 = null;
-        W_input2 = null;
-        nor = null;
-        not = null;
+        display = Util.createPathRegion(path);
     }
 
     public OR(Wire inputWire, Wire inputWire2){
+        display = Util.createPathRegion(path);
         init(inputWire,inputWire2);
     }
 

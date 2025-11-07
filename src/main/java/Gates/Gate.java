@@ -7,6 +7,7 @@ import javafx.scene.shape.SVGPath;
 public abstract class Gate {
     //Frontend
     public Region display;
+    public Wire[] w_inputs = new Wire[2];
 
     //Backend
     public Boolean out;
@@ -25,7 +26,11 @@ public abstract class Gate {
         return W_out.getOut();
     }
 
+    //todo make abstract
     public void init(){
+    }
 
+    public boolean addInput(Wire wire){
+        return false;
     }
 }

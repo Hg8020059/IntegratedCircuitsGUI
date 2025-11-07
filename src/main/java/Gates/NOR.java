@@ -4,6 +4,7 @@ import Basics.*;
 public class NOR extends Gate {
     //Frontend
     public static String path = "M 1 0 C 5 1 5 1 9 0 C 9 3 7 7 5 8 A 1 1 0 0 0 4 9 A 1 1 0 0 0 6 9 A 1 1 0 0 0 5 8 C 3 7 1 3 1 0";
+    public static int numInputs = 2;
 
     //Backend
     public PMOS p1;
@@ -15,6 +16,7 @@ public class NOR extends Gate {
     public Wire W_input2;
     //----------------------------------------- Constructors --------------------------------------------------
     public NOR(){
+        display = Util.createPathRegion(path);
         W_input1 = null;
         W_input2 = null;
 
@@ -25,6 +27,7 @@ public class NOR extends Gate {
     }
 
     public NOR(Wire inputWire, Wire inputWire2){
+        display = Util.createPathRegion(path);
         init(inputWire,inputWire2);
     }
     //----------------------------------------- Mutators ------------------------------------------------------

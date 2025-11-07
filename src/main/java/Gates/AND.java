@@ -8,28 +8,33 @@ public class AND extends Gate {
     //Backend components
     public NAND nand;
     public NOT not;
-    public Wire W_input1;
-    public Wire W_input2;
+    public Wire[] w_inputs = new Wire[2];
 
     public AND(){
-        W_input1 = null;
-        W_input2 = null;
+        display = Util.createPathRegion(path);
+        w_inputs[0] = null;
+        w_inputs[1] = null;
 
         nand = new NAND();
         not = new NOT();
     }
 
     public AND(Wire inputWire, Wire inputWire2){
-        init(inputWire,inputWire2);
+        display = Util.createPathRegion(path);
+        w_inputs[0] = inputWire;
+        w_inputs[1] = inputWire2;
+        init();
     }
 
-    public void init(Wire inputWire, Wire inputWire2) {
-        //sets the input wire that was passed in as W_input, then uses that while declaring the Basics.PMOS and Basics.NMOS as their controls
-        // Set the input before setting things that depend on the input wire
-        W_input1 = inputWire;
-        W_input2 = inputWire2;
+    //Assuming that w_inputs are all declared
+    public void init() {
+        for (Wire i : w_inputs) {
+            if (i == null) {
+                return;
+            }
+        }
 
-        nand = new NAND(inputWire, inputWire2);
+        nand = new NAND(w_inputs[0], w_inputs[1]);
         not = new NOT(nand.W_out);
         W_out = not.W_out;
     }

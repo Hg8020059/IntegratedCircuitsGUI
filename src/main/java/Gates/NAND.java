@@ -4,46 +4,64 @@ import Basics.*;
 public class NAND extends Gate {
     //Frontend
     public static String path = "M 1 0 L 9 0 L 9 4 C 9 7 7 8 5 8 A 1 1 0 0 0 4 9 A 1 1 0 0 0 6 9 A 1 1 0 0 0 5 8 C 3 8 1 7 1 4 L 1 0";
-    public int numInputs = 2;
+    public static int numInputs = 2;
 
     //Backend
+    public Wire[] w_inputs = new Wire[2];
+
     public PMOS p1;
     public PMOS p2;
     public NMOS n1;
     public NMOS n2;
-
-    public Wire W_input1;
-    public Wire W_input2;
     //----------------------------------------- Constructors --------------------------------------------------
 
     public NAND(){
+        display = Util.createPathRegion(path);
         p1 = null;
         p2 = null;
         n1 = null;
         n2 = null;
 
-        W_input1 = null;
-        W_input2 = null;
+        w_inputs[0] = null;
+        w_inputs[1] = null;
     }
 
     public NAND(Wire inputWire, Wire inputWire2){
-        init(inputWire, inputWire2);
+        display = Util.createPathRegion(path);
+        w_inputs[0] = inputWire;
+        w_inputs[1] = inputWire2;
+        init();
     }
     //----------------------------------------- Mutators ------------------------------------------------------
 
-    public void init(Wire inputWire, Wire inputWire2){
+    public void init(){
         //sets the input wire that was passed in as W_input, then uses that while declaring the PMOS and NMOS as their controls
         // Set the input before setting things that depend on the input wire
-        W_input1 = inputWire;
-        W_input2 = inputWire2;
+        for (Wire i : w_inputs) {
+            if (i == null) {
+                return;
+            }
+        }
 
-        p1 = new PMOS(W_vpp, W_input1, W_out);
-        p2 = new PMOS(W_vpp, W_input2, W_out);
+        p1 = new PMOS(W_vpp, w_inputs[0], W_out);
+        p2 = new PMOS(W_vpp, w_inputs[1], W_out);
 
         Wire n1out = new Wire("NMOS 1 out");
 
-        n1 = new NMOS(W_ground, W_input1, n1out);
-        n2 = new NMOS(n1out, W_input2, W_out);
+        n1 = new NMOS(W_ground, w_inputs[0], n1out);
+        n2 = new NMOS(n1out, w_inputs[1], W_out);
+    }
+
+
+    public boolean addInput(Wire wire){
+        for (int i = 0; i < w_inputs.length; i++) {
+            // If there's an unused input
+            if(w_inputs[i] == null){
+                w_inputs[i] = wire;
+                return true;
+            }
+        }
+        return false;
     }
 
     //----------------------------------------- Accessors -----------------------------------------------------

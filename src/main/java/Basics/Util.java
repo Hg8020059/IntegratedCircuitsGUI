@@ -67,6 +67,18 @@ public class Util {
         return str;
     }
 
+    public static Region createPathRegion(String path) {
+        SVGPath svg = new SVGPath();
+        svg.setContent(path);
+        Region region = new Region();
+        region.setShape(svg);
+        region.setMinSize(50, 60);
+        region.setPrefSize(50, 60);
+        region.setMaxSize(50, 60);
+        region.setStyle("-fx-background-color: transparent; -fx-border-color: black;");
+        return region;
+    }
+
     public static void main(String[] args){
         Wire w_in1 = new Wire();
         Wire w_in2 = new Wire();
