@@ -1,5 +1,6 @@
 package Gates;
 import Basics.*;
+import javafx.scene.shape.Circle;
 
 public class NOR extends Gate {
     //Frontend
@@ -16,7 +17,7 @@ public class NOR extends Gate {
     public Wire W_input2;
     //----------------------------------------- Constructors --------------------------------------------------
     public NOR(){
-        display = Util.createPathRegion(path);
+        super();
         W_input1 = null;
         W_input2 = null;
 
@@ -27,7 +28,7 @@ public class NOR extends Gate {
     }
 
     public NOR(Wire inputWire, Wire inputWire2){
-        display = Util.createPathRegion(path);
+        super();
         init(inputWire,inputWire2);
     }
     //----------------------------------------- Mutators ------------------------------------------------------

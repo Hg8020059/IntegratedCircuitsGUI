@@ -67,6 +67,7 @@ public class Util {
         return str;
     }
 
+    //create an svg path enclosed by a region
     public static Region createPathRegion(String path) {
         SVGPath svg = new SVGPath();
         svg.setContent(path);

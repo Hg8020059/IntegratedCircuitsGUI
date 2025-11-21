@@ -1,5 +1,6 @@
 package Gates;
 import Basics.*;
+import javafx.scene.shape.Circle;
 
 public class NAND extends Gate {
     //Frontend
@@ -16,7 +17,7 @@ public class NAND extends Gate {
     //----------------------------------------- Constructors --------------------------------------------------
 
     public NAND(){
-        display = Util.createPathRegion(path);
+        super();
         p1 = null;
         p2 = null;
         n1 = null;
@@ -27,7 +28,7 @@ public class NAND extends Gate {
     }
 
     public NAND(Wire inputWire, Wire inputWire2){
-        display = Util.createPathRegion(path);
+        super();
         w_inputs[0] = inputWire;
         w_inputs[1] = inputWire2;
         init();

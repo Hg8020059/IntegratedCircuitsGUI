@@ -1,5 +1,6 @@
 package Gates;
 import Basics.*;
+import javafx.scene.shape.Circle;
 
 public class AND extends Gate {
     //Frontend
@@ -11,7 +12,7 @@ public class AND extends Gate {
     public Wire[] w_inputs = new Wire[2];
 
     public AND(){
-        display = Util.createPathRegion(path);
+        super();
         w_inputs[0] = null;
         w_inputs[1] = null;
 
@@ -20,7 +21,7 @@ public class AND extends Gate {
     }
 
     public AND(Wire inputWire, Wire inputWire2){
-        display = Util.createPathRegion(path);
+        super();
         w_inputs[0] = inputWire;
         w_inputs[1] = inputWire2;
         init();

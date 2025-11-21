@@ -1,5 +1,6 @@
 package Gates;
 import Basics.*;
+import javafx.scene.shape.Circle;
 
 public class NOT extends Gate {
     //Frontend
@@ -14,7 +15,7 @@ public class NOT extends Gate {
 
     //----------------------------------------- Constructors --------------------------------------------------
     public NOT(){
-        display = Util.createPathRegion(path);
+        super();
         p1 = null;
         n1 = null;
         W_input1 = null;
@@ -22,7 +23,7 @@ public class NOT extends Gate {
 
 
     public NOT(Wire inputWire){
-        display = Util.createPathRegion(path);
+        super();
         init(inputWire);
     }
     //----------------------------------------- Mutators ------------------------------------------------------

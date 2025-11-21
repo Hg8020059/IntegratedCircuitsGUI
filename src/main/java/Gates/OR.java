@@ -1,5 +1,6 @@
 package Gates;
 import Basics.*;
+import javafx.scene.shape.Circle;
 
 public class OR extends Gate {
     //Frontend
@@ -14,11 +15,11 @@ public class OR extends Gate {
 
     //----------------------------------------- Constructors --------------------------------------------------
     public OR(){
-        display = Util.createPathRegion(path);
+        super();
     }
 
     public OR(Wire inputWire, Wire inputWire2){
-        display = Util.createPathRegion(path);
+        super();
         init(inputWire,inputWire2);
     }
 
