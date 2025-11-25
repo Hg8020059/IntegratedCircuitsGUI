@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 import java.util.ArrayList;
@@ -17,11 +18,43 @@ public class Controller {
 
     //Global Variables todo: look into getting rid of some of these
     public static ArrayList<Gate> components = new ArrayList<>(); //List holding all components
+    public static ArrayList<Circle> display = new ArrayList<>();
     public static ArrayList<Line> lines = new ArrayList<>();
     public static boolean wireToggle = false;
-    public static Circle wireStartGate = null;
+    public static Circle lineStartObject = null;
+    public static Gate wireStartGate = null;
 
     //------------------------------ mutators --------------------------------------------------
+    @FXML
+    public Circle newGateDisplay(){
+        //Create circle
+        Circle circle = new Circle(10,20,30);
+        //Set Events
+        circle.setOnMouseEntered(componentMouseEnter);
+        circle.setOnMouseExited(componentMouseExit);
+        circle.setOnMouseDragged(componentMouseDrag);
+        circle.setOnMouseClicked(componentMouseClick);
+        //Set Style
+        circle.setFill(Color.TRANSPARENT);
+        circle.setStroke(Color.BLACK);
+        //Setup SVGPath
+//        SVGPath svg = new SVGPath();
+//        svg.setContent(NAND.path);
+//        svg.setFill(Color.TRANSPARENT);
+//        svg.setStroke(Color.BLACK);
+//        svg.setMouseTransparent(true);
+//        svg.setScaleX(5);
+//        svg.setScaleY(5);
+//
+//        //Bind svg to the circle
+//        svg.layoutXProperty().bind(circle.centerXProperty());
+//        svg.layoutYProperty().bind(circle.centerYProperty());
+//
+//        //Add to Canvas
+        drawingPane.getChildren().add(circle);
+//        drawingPane.getChildren().add(svg);
+        return circle;
+    }
 
     //------------------------------ event handlers---------------------------------------------
     @FXML
@@ -51,32 +84,75 @@ public class Controller {
                 throw new RuntimeException("Shape path not found");
         };
 
+        //Add Gate to list of gates at same index as displays
         components.add(gate);
-        components.getLast().display.setOnMouseClicked(componentMouseClick);
-        drawingPane.getChildren().add(gate.display);
+        //Add to list of displays
+        display.add(newGateDisplay());
         System.out.println(components);
     }
 
-    //--------------------------------FXML handlers-----------------------------------------
+    //--------------------------------Event handlers-----------------------------------------
+    // Component display handlers
     EventHandler<MouseEvent> componentMouseClick = e ->  {
-        Circle display = (Circle) e.getSource();
+        Circle circle = (Circle) e.getSource();
         if(wireToggle){
-            if(wireStartGate == null){
-                wireStartGate = display;
+            if(lineStartObject == null){
+                lineStartObject = circle;
+                wireStartGate = components.get(display.indexOf(circle));
             }
             else{
+                //Create connection between associated gates (need to set up graph representation first eugh)
+
+                wireStartGate = null;
+
+                //Create Line between display objects
                 Line line = new Line();
                 line.setMouseTransparent(true);
-                line.startXProperty().bind(wireStartGate.centerXProperty());
-                line.startYProperty().bind(wireStartGate.centerYProperty());
-                line.endXProperty().bind(display.centerXProperty());
-                line.endYProperty().bind(display.centerYProperty());
-                wireStartGate = null;
+                line.startXProperty().bind(lineStartObject.centerXProperty());
+                line.startYProperty().bind(lineStartObject.centerYProperty());
+                line.endXProperty().bind(circle.centerXProperty());
+                line.endYProperty().bind(circle.centerYProperty());
+                lineStartObject = null;
                 drawingPane.getChildren().add(line);
             }
         }
-        System.out.println(wireStartGate);
     };
+
+    EventHandler<MouseEvent> componentMouseEnter = e -> {
+        Circle circle = (Circle) e.getSource();
+        circle.setFill(Color.GREY);
+    };
+
+    EventHandler<MouseEvent> componentMouseExit = e -> {
+        Circle circle = (Circle) e.getSource();
+        circle.setFill(Color.TRANSPARENT);
+    };
+
+    EventHandler<MouseEvent> componentMouseDrag = e -> {
+        Circle circle = (Circle) e.getSource();
+        circle.setCenterX(e.getX());
+        circle.setCenterY(e.getY());
+    };
+
+    // FXML Handlers
+    //Proof of concept
+//    @FXML
+//    protected void onScroll(ScrollEvent e){
+//        double newRadius;
+//        System.out.println(e.getDeltaY());
+//        if(display.getFirst().getRadius() + e.getDeltaY() < 1){
+//            newRadius = 1;
+//        }
+//        else if(display.getFirst().getRadius() + e.getDeltaY() > 50){
+//            newRadius = 50;
+//        }
+//        else{
+//            newRadius = display.getFirst().getRadius() + e.getDeltaY();
+//        }
+//        for (Circle curr : display) {
+//            curr.setRadius(newRadius);
+//        }
+//    }
 
     @FXML
     protected void onWireButtonClick(){

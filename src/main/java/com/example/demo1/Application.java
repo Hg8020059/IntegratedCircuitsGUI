@@ -17,6 +17,8 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("initial-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 620, 480);
+        Controller controller = fxmlLoader.getController();
+        System.out.println(controller);
         stage.setTitle("Hello!");
         stage.setScene(scene);
 
