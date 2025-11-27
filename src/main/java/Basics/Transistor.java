@@ -1,70 +1,84 @@
 package Basics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static Basics.Util.truthTable;
+
 public abstract class Transistor extends Basic{
-    public Wire input;
-    public Wire control;
+    public ArrayList<Basic> inputs;
+    public ArrayList<Basic> controls;
 
     //----------------------------------------- Constructors --------------------------------------------------
 
-//    Transistor(Wire input, Wire output, Wire control){
-//        super(output); //in the nmos/pmos subclasses is when auto-naming should be done
-//        setInput(input);
-//        setControl(control);
-//    }
+    public Transistor(){
+        inputs = new ArrayList<>();
+        controls = new ArrayList<>();
+    }
 
-    public Transistor(Wire input, Wire control, Wire output, String name){
-        super(output, name);
-        setInput(input);
-        setControl(control);
+    //outputs of this transistor are controlled by other nodes adding it as an input
+    public Transistor(Basic[] inputs, Basic[] controls){
+        this.inputs = new ArrayList<>();
+        this.controls = new ArrayList<>();
+        this.add(inputs, controls);
     }
 
     //----------------------------------------- Mutators ------------------------------------------------------
-
-    public void setInput(Wire input) {
-        this.input = input;
-        input.addOutput(this);
-    }
-
-    public void setControl(Wire control) {
-        this.control = control;
-        control.addOutput(this);
+    //add all nodes in the arrays to the inputs and outputs od this node
+    public void add(Basic[] inputs, Basic[] controls){
+        //Add specified inputs and outputs to appropriate places
+        this.inputs.addAll(Arrays.asList(inputs));
+        this.controls.addAll(Arrays.asList(controls));
+        //Add this Transistor to the input components output lists
+        for(Basic input : inputs) {
+            input.outputs.add(this);
+        }
+        for(Basic control : controls) {
+            control.outputs.add(this);
+        }
     }
 
 
     //----------------------------------------- Accessors -----------------------------------------------------
 
-    public String toString(){
-        return (super.toString() +
-                "\nInput: " + input.name + ", Value: " + input.getOut() +
-                "\nControl: " + control.name) + ", Value: " + control.getOut() +
-                "\nOutput: " + output.name + ", Value: " + getOut() + "\n";
+    //returns true if any of the input values are true
+    protected boolean calcIn(){
+        for(Basic input : inputs){
+            if(input.val){
+                return true;
+            }
+        }
+        return false;
     }
 
-    //abstract Boolean getOut();
+    //returns true if any of the control values are true
+    protected boolean calcCon(){
+        for(Basic control : controls){
+            if(control.val){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    //Sets val to the output given current inputs
+    public abstract Boolean calcOut();
     //----------------------------------------- Testing -------------------------------------------------------
 
     public static void main(String[] args){
-        Wire t1in = new Wire("n1in");
-        Wire t1con = new Wire("con");
-        Wire t1out = new Wire("n1out");
-        Wire t2out = new Wire("p1out");
+        Input input = new Input(true);
+        Input control = new Input(true);
 
-        Input controlInput = new Input(t1con, true, "Control Input");
+        Transistor nmos = new NMOS(new Input[]{input}, new Input[]{control});
+        Transistor pmos = new PMOS(new Input[]{input}, new Input[]{control});
+        System.out.println("nmos: " + nmos.val);
+        System.out.println("pmos: " + pmos.val);
+        nmos.calcOut();
+        pmos.calcOut();
+        System.out.println("nmos: " + nmos.val);
+        System.out.println("pmos: " + pmos.val);
 
-        Input Vpp = new Input(t1in, true, "Vpp");
-        controlInput.setOutput(t1con);
-
-        Transistor n1 = new NMOS(t1in,t1con,t1out);
-        Transistor p1 = new PMOS(t1out,t1con,t2out);
-
-
-        System.out.println(t1out);
-        System.out.println(n1);
-        System.out.println(p1);
-        controlInput.setVal(false);
-        System.out.println(n1);
-        System.out.println(p1);
+        truthTable(new Input[]{input, control}, nmos);
+        truthTable(new Input[]{input, control}, pmos);
     }
-
 }

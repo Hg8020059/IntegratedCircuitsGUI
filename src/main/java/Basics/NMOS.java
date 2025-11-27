@@ -1,30 +1,24 @@
 package Basics;
 
 public class NMOS extends Transistor {
-    public static int nmosNoNameCount = 1;
-
     //----------------------------------------- Constructors --------------------------------------------------
 
-    public NMOS(Wire input, Wire control, Wire output) {
-        super(input, control, output, "Basics.NMOS"+ nmosNoNameCount++);
-    }
-
-    public NMOS(Wire input, Wire control, Wire output, String name){
-        super(input, control, output, name);
+    public NMOS(Basic[] inputs, Basic[] controls) {
+        super(inputs, controls);
     }
 
     //----------------------------------------- Mutators ------------------------------------------------------
 
     //----------------------------------------- Accessors -----------------------------------------------------
+    //Update all nodes leading to this one, for non looping circuits
 
-
-    public Boolean getOut() {
-        if(control.getOut() == false){
-            return false;
+    public Boolean calcOut() {
+        if(!calcCon()){
+            val = false;
         }
-        else if (control.getOut() == true){
-            return input.getOut();
+        else if (calcCon()){
+            val = calcIn();
         }
-        else return null;
+        return val;
     }
 }

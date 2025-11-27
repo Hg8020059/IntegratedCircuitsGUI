@@ -5,25 +5,21 @@ public class PMOS extends Transistor {
 
     //----------------------------------------- Constructors --------------------------------------------------
 
-    public PMOS(Wire input, Wire control, Wire output) {
-        super(input, control, output, "Basics.PMOS"+ pmosNoNameCount++);
-    }
-
-    public PMOS(Wire input, Wire control, Wire output, String name){
-        super(input, control, output, name);
+    public PMOS(Basic[] inputs, Basic[] controls) {
+        super(inputs, controls);
     }
 
     //----------------------------------------- Mutators ------------------------------------------------------
 
     //----------------------------------------- Accessors -----------------------------------------------------
 
-    public Boolean getOut() {
-        if(control.getOut() == true){
-            return false;
+    public Boolean calcOut() {
+        if(calcCon()){
+            val = false;
         }
-        else if (control.getOut() == false){
-            return input.getOut();
+        else if (!calcCon()){
+            val = calcIn();
         }
-        else return null;
+        return val;
     }
 }

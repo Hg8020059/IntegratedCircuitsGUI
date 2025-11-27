@@ -1,7 +1,5 @@
 package Basics;
 
-import Gates.AND;
-import Gates.NOT;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.SVGPath;
 
@@ -37,7 +35,7 @@ public class Util {
     //Takes a given amount of inputs and an output, assumes that they are connected, then prints the output for all
     //possible combinations of inputs in the form of a truth table
     //This allows an easy way of seeing the truth table for any system, you just need to provide the inputs and outputs
-    public static String truthTable(Input[] inputs, Wire output){
+    public static String truthTable(Input[] inputs, Transistor output){
         String str = "";
         int numIn = inputs.length;
         int[][] arr = testValues(numIn);
@@ -59,9 +57,10 @@ public class Util {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < numIn; j++) {
                 inputs[j].setVal(toBool(arr[i][j]));
+                output.calcOut(); //Temporary fix to test, only works for a single transistor
                 System.out.print(arr[i][j] + "  ");
             }
-            System.out.println("| " + toInt(output.getOut()));
+            System.out.println("| " + toInt(output.val));
         }
         System.out.println();
         return str;
@@ -81,20 +80,6 @@ public class Util {
     }
 
     public static void main(String[] args){
-        Wire w_in1 = new Wire();
-        Wire w_in2 = new Wire();
-        AND and = new AND(w_in1,w_in2);
-        Input Input1 = new Input(w_in1, false);
-        Input Input2 = new Input(w_in2, false);
-
-        NOT not = new NOT(w_in1);
-
-        Util.truthTable(new Input[]{Input1,Input2}, and.W_out);
-        Util.truthTable(new Input[]{Input1}, not.W_out);
-
-        not.init(and.W_out);
-
-        Util.truthTable(new Input[]{Input1, Input2}, not.W_out);
 
     }
 }
