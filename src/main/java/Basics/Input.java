@@ -20,9 +20,8 @@ public class Input extends Basic{
         return (super.toString() + "\nOutput Value: " + val.toString());
     }
 
-    //Update all nodes leading to this one, for non looping circuits
-    //This is the base case of getOut
-    public Boolean getOut(){
+    //Base case of recOut
+    public Boolean recOut(){
         return val;
     }
 }

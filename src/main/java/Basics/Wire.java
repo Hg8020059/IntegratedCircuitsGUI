@@ -37,46 +37,22 @@
 //        this.outputs.add(output); // We want to reference the original, not create a copy of it
 //    }
 //
-//
-////    public Boolean getOut(){
-////        Boolean out = null;
-////        for (Basic i : inputs){
-////            if (i.getOut()){
-////                out = true;
-////                return out;
-////            }
-////            out = false;
-////        }
-////        return out;
-////    }
+//    public Boolean getOut(){
+//        Boolean out = null;
+//        for (Basic i : inputs){
+//            if (i.recOut()){
+//                out = true;
+//                return out;
+//            }
+//            out = false;
+//        }
+//        return out;
+//    }
 //
 //    //----------------------------------------- Accessors -----------------------------------------------------
 //
-//    public String toString(){
-//        String output = "Wire Name: " + name + "\n" + "Inputs:";
-//        for (Basic item : inputs) {
-//            output = output.concat(item.name + ", ");
-//        }
-//
-//        output = output + "\nOutputs: ";
-//        for (Basic item : outputs) {
-//            output = output.concat(item.name + ", ");
-//        }
-//
-//        output += "\n";
-//
-//        return output;
-//    }
-//
 //    //----------------------------------------- Testing -------------------------------------------------------
 //    public static void main(String[] args){
-////        Wire testWire = new Wire();
-////        Input Vpp = new Input(testWire, true, "Vpp");
-////        Input Ground = new Input(testWire, false, "Ground");
-////
-////        System.out.println(testWire);
-////
-////        // Testing wire.getOut
-////        System.out.println("Wire Output: " + testWire.getOut());
+//
 //    }
 //}
