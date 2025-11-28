@@ -57,10 +57,9 @@ public class Util {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < numIn; j++) {
                 inputs[j].setVal(toBool(arr[i][j]));
-                output.calcOut(); //Temporary fix to test, only works for a single transistor
                 System.out.print(arr[i][j] + "  ");
             }
-            System.out.println("| " + toInt(output.val));
+            System.out.println("| " + toInt(output.recOut()));
         }
         System.out.println();
         return str;

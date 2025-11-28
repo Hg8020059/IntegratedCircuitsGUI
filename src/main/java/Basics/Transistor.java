@@ -63,6 +63,26 @@ public abstract class Transistor extends Basic{
 
     //Sets val to the output given current inputs
     public abstract Boolean calcOut();
+
+    // Recursive out functions
+    protected Boolean recIn(){
+        for(Basic input: inputs){
+            if(input.recOut()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Boolean recCon(){
+        for(Basic control: controls){
+            if(control.recOut()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //----------------------------------------- Testing -------------------------------------------------------
 
     public static void main(String[] args){
@@ -71,6 +91,8 @@ public abstract class Transistor extends Basic{
 
         Transistor nmos = new NMOS(new Input[]{input}, new Input[]{control});
         Transistor pmos = new PMOS(new Input[]{input}, new Input[]{control});
+
+        //CalcOut test
         System.out.println("nmos: " + nmos.val);
         System.out.println("pmos: " + pmos.val);
         nmos.calcOut();
@@ -78,7 +100,11 @@ public abstract class Transistor extends Basic{
         System.out.println("nmos: " + nmos.val);
         System.out.println("pmos: " + pmos.val);
 
-        truthTable(new Input[]{input, control}, nmos);
-        truthTable(new Input[]{input, control}, pmos);
+        // Recursive Out test
+        Transistor nmos2 = new NMOS(new Basic[]{nmos}, new Basic[]{control});
+        System.out.println(nmos2.recOut());
+
+        //Truth Table test
+        truthTable(new Input[]{input, control}, nmos2);
     }
 }

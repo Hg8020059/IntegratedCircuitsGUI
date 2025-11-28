@@ -22,4 +22,16 @@ public class PMOS extends Transistor {
         }
         return val;
     }
+
+    //Recursive Out
+    public Boolean recOut(){
+        Boolean out = null;
+        if(recCon()){
+            out = false;
+        }
+        else if(!recCon()){
+            out = recIn();
+        }
+        return out;
+    }
 }
