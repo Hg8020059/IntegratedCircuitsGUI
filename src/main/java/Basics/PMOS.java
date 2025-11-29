@@ -5,6 +5,10 @@ public class PMOS extends Transistor {
 
     //----------------------------------------- Constructors --------------------------------------------------
 
+    public PMOS(){
+        super();
+    }
+
     public PMOS(Basic[] inputs, Basic[] controls) {
         super(inputs, controls);
     }

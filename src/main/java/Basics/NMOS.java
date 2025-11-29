@@ -3,6 +3,10 @@ package Basics;
 public class NMOS extends Transistor {
     //----------------------------------------- Constructors --------------------------------------------------
 
+    public NMOS(){
+        super();
+    }
+
     public NMOS(Basic[] inputs, Basic[] controls) {
         super(inputs, controls);
     }

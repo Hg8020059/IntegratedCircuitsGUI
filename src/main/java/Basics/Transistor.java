@@ -12,8 +12,8 @@ public abstract class Transistor extends Basic{
     //----------------------------------------- Constructors --------------------------------------------------
 
     public Transistor(){
-        inputs = new ArrayList<>();
-        controls = new ArrayList<>();
+        this.inputs = new ArrayList<>();
+        this.controls = new ArrayList<>();
     }
 
     //outputs of this transistor are controlled by other nodes adding it as an input
@@ -24,6 +24,9 @@ public abstract class Transistor extends Basic{
     }
 
     //----------------------------------------- Mutators ------------------------------------------------------
+    public void add(Basic input, Basic control){
+        add(new Basic[]{input}, new Basic[]{control});
+    }
     //add all nodes in the arrays to the inputs and outputs od this node
     public void add(Basic[] inputs, Basic[] controls){
         //Add specified inputs and outputs to appropriate places
