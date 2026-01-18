@@ -1,25 +1,27 @@
 package com.example.demo1;
 
-import Basics.Basic;
-import Basics.Input;
-import Basics.NMOS;
-import Basics.PMOS;
+import Basics.*;
 import Gates.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Controller {
     @FXML
@@ -28,6 +30,7 @@ public class Controller {
     //Global Variables todo: look into getting rid of some of these
     public static ArrayList<Basic> componentList = new ArrayList<>(); //List holding all components
     public static ArrayList<Circle> componentDisplayList = new ArrayList<>();
+    public static ArrayList<Text> valTextList = new ArrayList<>();
     public static ArrayList<Line> lines = new ArrayList<>();
     public static boolean wireToggle = false;
     public static Circle lineStartObject = null;
@@ -39,6 +42,7 @@ public class Controller {
     public Circle newGateDisplay(Text text){
         //Create circle
         Circle circle = new Circle(10,20,30);
+        Text valText = new Text("False");
         //Set Events
         circle.setOnMouseEntered(componentMouseEnter);
         circle.setOnMouseExited(componentMouseExit);
@@ -52,15 +56,53 @@ public class Controller {
         text.yProperty().bind(circle.centerYProperty());
         text.setTextAlignment(TextAlignment.CENTER);
         text.setMouseTransparent(true);
-        //Add Circle and Text objects to a stack pane. Problem is I cant then move the circle
-//        text.setBoundsType(TextBoundsType.VISUAL);
-//        StackPane stack = new StackPane(circle, text);
+
+        valText.xProperty().bind(circle.centerXProperty());
+        valText.yProperty().bind(circle.centerYProperty());
+        valText.setTextAlignment(TextAlignment.CENTER);
+        valText.setMouseTransparent(true);
 
         //Add to Canvas
         drawingPane.getChildren().add(circle);
-        drawingPane.getChildren().add(text);
-//        drawingPane.getChildren().add(stack);
+        //drawingPane.getChildren().add(text);
+        drawingPane.getChildren().add(valText);
+
+        valTextList.add(valText);
         return circle;
+    }
+
+    public String getTransistorInputType(){
+        String type = "input";
+        Dialog<ButtonType> dialog = new Dialog<>();
+        ButtonType inputButtonType = new ButtonType("Input", ButtonBar.ButtonData.OK_DONE);
+        ButtonType controlButtonType = new ButtonType("Control", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(inputButtonType, controlButtonType);
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == inputButtonType) {
+            type = "input";
+        }
+        else if(result.isPresent() && result.get() == controlButtonType){
+            type = "control";
+        }
+
+        return type;
+    }
+
+    public Boolean getInputValue(){
+        boolean type = true;
+        Dialog<ButtonType> dialog = new Dialog<>();
+        ButtonType inputButtonType = new ButtonType("True", ButtonBar.ButtonData.OK_DONE);
+        ButtonType controlButtonType = new ButtonType("False", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(inputButtonType, controlButtonType);
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == inputButtonType) {
+            type = true;
+        }
+        else if(result.isPresent() && result.get() == controlButtonType){
+            type = false;
+        }
+
+        return type;
     }
 
     //------------------------------ event handlers---------------------------------------------
@@ -93,14 +135,45 @@ public class Controller {
 
     // Component display handlers
     EventHandler<MouseEvent> componentMouseClick = e ->  {
+        if (!e.isStillSincePress()){
+            return;
+        }
+
         Circle circle = (Circle) e.getSource();
+        Basic component = componentList.get(componentDisplayList.indexOf(circle));
+
+        //Updates component when it is clicked on
+        System.out.println(component.recOut());
+        valTextList.get(componentDisplayList.indexOf(circle)).setText(String.valueOf(component.recOut()));
+
         if(wireToggle){
             if(lineStartObject == null){
                 lineStartObject = circle;
                 wireStartComponent = componentList.get(componentDisplayList.indexOf(circle));
             }
             else{
-                //Create connection between associated gates (need to set up graph representation first eugh)
+                //if the selected component is a transistor allow the user to select whether they are setting the control or input
+                // if its a gate, need to check if all of its inputs have been used, if not add this input, if so, send an error
+                //If component is a transistor
+                if(component instanceof Transistor){
+                    String type = getTransistorInputType();
+                    if(Objects.equals(type, "input")){
+                        ((Transistor) component).addInput(wireStartComponent);
+                    }
+                    else if(Objects.equals(type, "control")){
+                        ((Transistor) component).addControl(wireStartComponent);
+                    }
+                }
+
+                //If component is a gate
+                else if(component instanceof Gate){
+                    
+                }
+                //For components that dont take inputs just break out of the function
+                else{
+                    System.out.println("This component doesn't accept inputs");
+                    return;
+                }
 
                 wireStartComponent = null;
 
@@ -113,6 +186,14 @@ public class Controller {
                 line.endYProperty().bind(circle.centerYProperty());
                 lineStartObject = null;
                 drawingPane.getChildren().add(line);
+            }
+        }
+        //Wire toggle off
+        else{
+            if(component instanceof Input){
+                boolean val = getInputValue();
+                ((Input) component).setVal(val);
+                valTextList.get(componentDisplayList.indexOf(circle)).setText(String.valueOf(val));
             }
         }
     };
@@ -129,6 +210,7 @@ public class Controller {
 
     EventHandler<MouseEvent> componentMouseDrag = e -> {
         Circle circle = (Circle) e.getSource();
+        System.out.println("(" + circle.getCenterX() + "," + circle.getCenterY() + ")");
         circle.setCenterX(e.getX());
         circle.setCenterY(e.getY());
     };

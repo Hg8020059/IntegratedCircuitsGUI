@@ -24,6 +24,14 @@ public abstract class Transistor extends Basic{
     }
 
     //----------------------------------------- Mutators ------------------------------------------------------
+    public void addInput(Basic input){
+        this.inputs.add(input);
+        input.outputs.add(this);
+    }
+    public void addControl(Basic control){
+        this.controls.add(control);
+        control.outputs.add(this);
+    }
     public void add(Basic input, Basic control){
         add(new Basic[]{input}, new Basic[]{control});
     }
